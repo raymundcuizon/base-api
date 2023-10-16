@@ -7,28 +7,28 @@ import { UpdatePositionDto } from './dto/update-position.dto';
 export class PositionsController {
   constructor(private readonly positionsService: PositionsService) {}
 
-  @Post()
-  create(@Body() createPositionDto: CreatePositionDto) {
-    return this.positionsService.create(createPositionDto);
-  }
+  // @Post()
+  // create(@Body() createPositionDto: CreatePositionDto) {
+  //   return this.positionsService.create(createPositionDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.positionsService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.positionsService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.positionsService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.positionsService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePositionDto: UpdatePositionDto) {
-    return this.positionsService.update(+id, updatePositionDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updatePositionDto: UpdatePositionDto) {
+  //   return this.positionsService.update(+id, updatePositionDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.positionsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.positionsService.remove(+id);
+  // }
 }

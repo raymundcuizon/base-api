@@ -2,13 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as config from 'config';
-
-
 
 async function bootstrap() {
   // const serverConfig = config.get('server');
   const logger = new Logger('bootstrap');
+  logger.log(process.env.PORT)
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
@@ -30,15 +28,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-
-  // if (process.env.NODE_ENV === 'development') {
-  //   app.enableCors();
-  // } else {
-  //   app.enableCors({ origin: serverConfig.origin });
-  //   logger.log(`Accepting requests from origin "${serverConfig.origin}"`);
-  // }
-
-  const port = 3000;
+  const port = process.env.PORT;
   await app.listen(port);
   logger.log(`Application listening on port ${port}`);
 }

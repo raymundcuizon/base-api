@@ -27,14 +27,11 @@ export class UsersService {
     try {
       const userCreate = await this.userRepository.save(user);
       delete userCreate.password
+      delete userCreate.salt
       return userCreate
     } catch (error) {
-      this.logger.log(error);
-      if (error.code === 'ER_DUP_ENTRY') { // duplicate username
-        throw new ConflictException('Username already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
+      throw new InternalServerErrorException();
+     
     }
   }
 
@@ -44,8 +41,8 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneUsername(username: string): Promise<User> {
+    return this.userRepository.findOneBy({username});
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

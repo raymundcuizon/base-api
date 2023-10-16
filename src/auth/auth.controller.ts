@@ -23,27 +23,36 @@ import {
   ApiOkResponse,
   ApiBody,
   ApiBearerAuth,
-  ApiResponse } from '@nestjs/swagger';
+  ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { SigninResponseDTO } from './dto/signinResponse.dto';
 import { RefreshDto } from './dto/refreshDto';
+import { Locale } from '../decorators/locale.decorator';
+
 
 @Controller('auth')
+@ApiHeader({ name: 'locale' })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signup')
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
-  }
+  // @Post('signup')
+  // create(@Body() createAuthDto: CreateAuthDto, @Locale() locale: string) {
+  //   console.log(locale)
+  //   return this.authService.create(createAuthDto);
+  // }
 
   @Post('signin')
   @HttpCode(200)
   @ApiResponse({ status: HttpStatus.OK, type: SigninResponseDTO })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, type: UnauthorizedException })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, type: UnauthorizedException,  })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: BadRequestException })
   @ApiBody({type: SigninUserDTO})
-  signIn(@Body() signinUserDTO: SigninUserDTO): Promise<SigninResponseDTO> {
-    return this.authService.signIn(signinUserDTO);
+  async signIn(@Body() signinUserDTO: SigninUserDTO): Promise<SigninResponseDTO> {
+
+    const user = await this.authService.validateUserPassword(signinUserDTO);
+
+    if (!user) throw new UnauthorizedException('Invalid credentials'); 
+
+    return await this.authService.genToken(user);
   }
 
   @Post('refresh')
@@ -55,23 +64,23 @@ export class AuthController {
     return this.authService.authRefresh(refreshDto.refreshToken);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.authService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.authService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
+  //   return this.authService.update(+id, updateAuthDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.authService.remove(+id);
+  // }
 }

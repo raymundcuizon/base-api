@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { SystemLogsService } from './system-logs.service';
 import { CreateSystemLogDto } from './dto/create-system-log.dto';
 import { UpdateSystemLogDto } from './dto/update-system-log.dto';
+import { Request } from 'express';
+import { ApiHeader } from '@nestjs/swagger';
 
 @Controller('system-logs')
+@ApiHeader({ name: 'locale' })
 export class SystemLogsController {
   constructor(private readonly systemLogsService: SystemLogsService) {}
 
@@ -13,7 +16,9 @@ export class SystemLogsController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Req() request: Request) {
+    const locale = request.locale;
+    console.log(locale)
     return this.systemLogsService.findAll();
   }
 

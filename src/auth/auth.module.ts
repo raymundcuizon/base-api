@@ -11,7 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports:[
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: [`stage.${process.env.STAGE}.env`],
+    }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({ global: true,secret: process.env.JWT_SECRET, signOptions: { expiresIn: '60s' } }),
     DatabaseModule,

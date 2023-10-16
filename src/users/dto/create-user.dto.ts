@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHeader, ApiProperty } from '@nestjs/swagger';
 import { IsString, MinLength, MaxLength, Matches, IsBoolean } from 'class-validator';
+import { Locale } from '../../decorators/locale.decorator';
 
 export class CreateUserDto {
   @IsString()

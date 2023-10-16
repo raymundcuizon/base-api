@@ -66,7 +66,7 @@ export class AuthService {
     return await this.genToken(user);
   }
 
-  private async genToken(user: User) {
+  async genToken(user: User) {
 
     const payload: JwtPayload = {
       id: user.id,
@@ -75,12 +75,11 @@ export class AuthService {
       firstname: user.firstname,
       lastname: user.lastname,
       mobileNumber: user.mobileNumber,
+      type: user.type
     };
 
     const accessToken = await this.jwtService.signAsync(payload,  { expiresIn: '1d' })
     const refreshToken = await this.jwtService.signAsync(payload,  { expiresIn: '2d' })
-    // const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' });
-    // const refreshToken = this.jwtService.sign({ username: payload.username }, { expiresIn: '2d' });
     this.logger.debug(`Generated JWT Token with payload ${JSON.stringify(payload)}`);
     return { accessToken, refreshToken };
   }

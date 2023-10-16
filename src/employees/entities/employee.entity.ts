@@ -1,4 +1,6 @@
+import { Client } from 'src/client/entities/client.entity';
 import { Company } from 'src/company/entities/company.entity';
+import { User } from 'src/users/entities/user.entity';
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
@@ -9,6 +11,9 @@ export class Employee extends BaseEntity {
     @Column()
     name: string
 
-    @ManyToOne(() => Company, (company) => company.employees)
-    company: Company;
+    @ManyToOne(() => Client, (client) => client.employees)
+    client: Client;
+
+    @ManyToOne(() => User, (user) => user.employees)
+    user: User;
 }

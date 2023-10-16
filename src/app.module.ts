@@ -10,13 +10,26 @@ import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { configValidationSchema } from './config.schema';
+import { ClientModule } from './client/client.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LocaleInterceptor } from './locale/locale.interceptor';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: [`stage.${process.env.STAGE}.env`],
+      validationSchema: configValidationSchema,
+      isGlobal: true,
+    }),
     DatabaseModule,
-    SystemLogsModule, UsersModule, AuthModule, PositionsModule, CompanyModule, DepartmentsModule, EmployeesModule],
+    SystemLogsModule, UsersModule, AuthModule, PositionsModule, CompanyModule, DepartmentsModule, EmployeesModule, ClientModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LocaleInterceptor,
+    }
+  ],
 })
 export class AppModule {}
