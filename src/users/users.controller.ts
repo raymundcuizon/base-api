@@ -13,7 +13,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @ApiBody({ type: CreateUserDto })
   @ApiCreatedResponse({ description: 'User registration', type: CreateUserSuccessDto })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Username already exists' })

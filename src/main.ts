@@ -11,7 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const options = new DocumentBuilder()
-    .setTitle('Cuizone Payroll API')
+    .setTitle('API')
     .setVersion('1.0.0')
     .addBearerAuth(
       { 
