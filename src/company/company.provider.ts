@@ -3,7 +3,7 @@ import { Company } from './entities/company.entity';
 
 export const compnayProviders = [
   {
-    provide: 'COMPNAY_REPOSITORY',
+    provide: 'COMPANY_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Company),
     inject: ['DATA_SOURCE'],
   },

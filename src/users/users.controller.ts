@@ -1,9 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ValidationPipe, HttpStatus, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  ValidationPipe,
+  HttpStatus,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { CreateUserSuccessDto } from './dto/create-user-success.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/decorators/role.enum';
@@ -15,18 +34,29 @@ export class UsersController {
   @Post()
   // @Roles(Role.Admin)
   @ApiBody({ type: CreateUserDto })
-  @ApiCreatedResponse({ description: 'User registration', type: CreateUserSuccessDto })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Username already exists' })
-  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
+  @ApiCreatedResponse({
+    description: 'User registration',
+    type: CreateUserSuccessDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Username already exists',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   @ApiCreatedResponse({
     description: 'user registration',
   })
   async create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    const validateUser = await this.usersService.findOneUsername(createUserDto.username)
-    if (validateUser) throw new BadRequestException("username is already exist")
-    return  await this.usersService.create(createUserDto)
+    const validateUser = await this.usersService.findOneUsername(
+      createUserDto.username,
+    );
+    if (validateUser)
+      throw new BadRequestException('username is already exist');
+    return await this.usersService.create(createUserDto);
   }
-
 
   @Get()
   @UseGuards(AuthGuard())
@@ -41,7 +71,7 @@ export class UsersController {
   @ApiUnauthorizedResponse()
   @ApiBearerAuth('access-token')
   findOne(@Param('id') id: string) {
-    return ""
+    return '';
     // return this.usersService.findOne(id);
   }
 
