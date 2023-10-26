@@ -7,6 +7,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryColumn,
@@ -23,6 +24,7 @@ export class Company extends AbstractEntity<Company> {
   name: string;
 
   @OneToMany(() => Client, (client) => client.company)
+  @JoinColumn()
   clients: Client[];
 
   @ManyToOne(() => User, (user) => user.companies)

@@ -36,7 +36,9 @@ export class CompanyService {
   }
 
   async findAll(): Promise<Company[]> {
-    return await this.companyRepository.find();
+    return await this.companyRepository.find({
+      relations: ['clients'],
+    });
   }
 
   async findByName(name: string): Promise<Company | null> {
@@ -49,12 +51,16 @@ export class CompanyService {
     return company;
   }
   async findOne(id: number): Promise<Company> {
-    const company = await this.companyRepository.findOne({
-      where: {
-        id,
-      },
-    });
-
+    const company = await this.companyRepository
+      .createQueryBuilder('company')
+      .leftJoinAndSelect('company.clients', 'clients')
+      .limit(7)
+      .orderBy({
+        'clients.name': 'ASC',
+      })
+      .select(['company', 'clients.id', 'clients.name'])
+      .where('company.id = :id', { id })
+      .getOne();
     if (!company)
       throw new HttpException('Conpany not found', HttpStatus.NOT_FOUND);
     return company;
