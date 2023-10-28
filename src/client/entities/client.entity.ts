@@ -29,6 +29,12 @@ export class Client extends AbstractEntity<Client> {
   @Column({ nullable: true })
   userId: number;
 
+  @Column({ nullable: true })
+  contact_number: string;
+
+  @Column({ nullable: true })
+  address: string;
+
   @OneToMany(() => Employee, (employee) => employee.client)
   employees: Employee[];
 

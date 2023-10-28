@@ -7,10 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'src/decorators/roles.guard';
 @Module({
-  imports: [
-    DatabaseModule,
-    forwardRef(() => AuthModule)
-  ],
+  imports: [DatabaseModule, forwardRef(() => AuthModule)],
   controllers: [UsersController],
   providers: [
     {
@@ -18,7 +15,8 @@ import { RolesGuard } from 'src/decorators/roles.guard';
       useClass: RolesGuard,
     },
     ...userProviders,
-    UsersService
-  ]
+    UsersService,
+  ],
+  exports: [UsersService],
 })
 export class UsersModule {}

@@ -9,28 +9,61 @@ import {
 } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
+import { User, userType } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcryptjs';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class ClientService {
   private logger = new Logger('ClientService');
 
   constructor(
+    @Inject('DATA_SOURCE') private dataSource: DataSource,
     @Inject('CLIENT_REPOSITORY') private clientRepository: Repository<Client>,
+    private readonly userService: UsersService,
   ) {}
   async create(createClientDto: CreateClientDto): Promise<Client> {
     let client = new Client({
       ...createClientDto,
     });
 
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
     client.name = client.name.toLocaleLowerCase();
+
+    await queryRunner.startTransaction();
+
     try {
-      const save = await this.clientRepository.save(client);
-      return save;
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException();
+      const salt = await bcrypt.genSalt();
+      const password = await this.userService.hashPassword('1234', salt);
+      const user = {
+        email: createClientDto.email,
+        username: createClientDto.email.split('@')[0],
+        firstname: 'n/a',
+        salt,
+        password,
+        lastname: 'n/a',
+        mobileNumber: createClientDto.contact_number,
+        isActivated: false,
+        type: userType.CLI_ADMIN,
+      };
+      const saveUser = await queryRunner.manager.save(User, user);
+      client.userId = saveUser.id;
+      const saveClient = await queryRunner.manager.save(Client, client);
+
+      await queryRunner.commitTransaction();
+
+      return saveClient;
+    } catch (err) {
+      this.logger.log(err);
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(err.toString());
+    } finally {
+      await queryRunner.release();
     }
   }
 
