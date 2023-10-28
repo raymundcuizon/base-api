@@ -5,6 +5,8 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -25,8 +27,9 @@ export class UsersService {
       ...createUserDto,
     });
 
-    user.salt = await bcrypt.genSalt();
-    user.password = await this.hashPassword(createUserDto.password, user.salt);
+    const saltPassword = await this.saltPassword(createUserDto.password);
+    user.salt = saltPassword.salt;
+    user.password = await saltPassword.password;
 
     try {
       const userCreate = await this.userRepository.save(user);
@@ -35,6 +38,35 @@ export class UsersService {
       return userCreate;
     } catch (error) {
       throw new InternalServerErrorException();
+    }
+  }
+
+  async saltPassword(stringPass): Promise<{ salt: string; password: string }> {
+    const salt = await bcrypt.genSalt();
+    const password = await this.hashPassword(stringPass, salt);
+    return {
+      salt,
+      password,
+    };
+  }
+
+  async updatePassword(id: number, password: string): Promise<void> {
+    try {
+      const saltPassword = await this.saltPassword(password);
+
+      const client = await this.userRepository.update(
+        { id },
+        {
+          salt: saltPassword.salt,
+          password: saltPassword.password,
+        },
+      );
+
+      if (!client.affected)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
     }
   }
 

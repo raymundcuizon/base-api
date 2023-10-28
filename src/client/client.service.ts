@@ -38,14 +38,14 @@ export class ClientService {
     await queryRunner.startTransaction();
 
     try {
-      const salt = await bcrypt.genSalt();
-      const password = await this.userService.hashPassword('1234', salt);
+      const saltPassword = await this.userService.saltPassword('1234');
+
       const user = {
         email: createClientDto.email,
         username: createClientDto.email.split('@')[0],
         firstname: 'n/a',
-        salt,
-        password,
+        salt: saltPassword.salt,
+        password: saltPassword.password,
         lastname: 'n/a',
         mobileNumber: createClientDto.contact_number,
         isActivated: false,
