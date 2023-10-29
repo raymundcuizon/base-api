@@ -15,6 +15,7 @@ import { User, userType } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { stringify } from 'querystring';
+import { generateRandomCode } from 'src/utils';
 
 @Injectable()
 export class ClientService {
@@ -50,6 +51,7 @@ export class ClientService {
         mobileNumber: createClientDto.contact_number,
         isActivated: false,
         type: userType.CLI_ADMIN,
+        activationCode: generateRandomCode(12),
       };
       const saveUser = await queryRunner.manager.save(User, user);
       client.userId = saveUser.id;

@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 import { SigninResponseDTO } from './dto/signinResponse.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
+    private readonly userService: UsersService,
     private jwtService: JwtService,
   ) {}
 
@@ -78,7 +80,7 @@ export class AuthService {
       firstname: user.firstname,
       lastname: user.lastname,
       mobileNumber: user.mobileNumber,
-      type: user.type,
+      userType: user.type,
     };
 
     const accessToken = await this.jwtService.signAsync(payload, {
@@ -90,7 +92,7 @@ export class AuthService {
     this.logger.debug(
       `Generated JWT Token with payload ${JSON.stringify(payload)}`,
     );
-    return { accessToken, refreshToken };
+    return { ...payload, accessToken, refreshToken };
   }
 
   async validateUserPassword(signinUserDTO: SigninUserDTO): Promise<User> {
@@ -106,5 +108,12 @@ export class AuthService {
     } else {
       return null;
     }
+  }
+
+  async activateNewAccount(
+    activationCode: string,
+    passport: string,
+  ): Promise<void> {
+    return await this.userService.activateNewAccount(activationCode, passport);
   }
 }

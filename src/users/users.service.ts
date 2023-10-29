@@ -50,15 +50,19 @@ export class UsersService {
     };
   }
 
-  async updatePassword(id: number, password: string): Promise<void> {
+  async activateNewAccount(
+    activationCode: string,
+    password: string,
+  ): Promise<void> {
     try {
       const saltPassword = await this.saltPassword(password);
 
       const client = await this.userRepository.update(
-        { id },
+        { activationCode },
         {
           salt: saltPassword.salt,
           password: saltPassword.password,
+          isActivated: true,
         },
       );
 
