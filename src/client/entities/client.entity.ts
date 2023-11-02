@@ -1,5 +1,6 @@
 import { Company } from 'src/company/entities/company.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
+import { Department } from 'src/departments/entities/department.entity';
 import { Employee } from 'src/employees/entities/employee.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -44,4 +45,8 @@ export class Client extends AbstractEntity<Client> {
 
   @ManyToOne(() => User, (user) => user.clients)
   user: User;
+
+  @OneToMany(() => Department, (department) => department.client)
+  @JoinTable()
+  department: Department[];
 }
