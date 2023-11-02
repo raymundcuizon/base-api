@@ -1,4 +1,8 @@
 export enum Role {
-    User = 'user',
-    Admin = 'admin',
-  }
+  SYS_ADMIN = 'SYS_ADMIN',
+  COM_ADMIN = 'COM_ADMIN',
+  COM_STAFF = 'COM_STAFF',
+  CLI_ADMIN = 'CLI_ADMIN',
+  CLI_STAFF = 'CLI_STAFF',
+  EMP = 'EMP',
+}
