@@ -95,7 +95,6 @@ export class ClientService {
       .where('client.id = :id', { id })
       .getOne();
 
-    console.log(client);
     if (!client)
       throw new HttpException('Client Company not found', HttpStatus.NOT_FOUND);
     return client;

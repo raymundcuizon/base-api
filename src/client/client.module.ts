@@ -9,6 +9,7 @@ import { UsersModule } from 'src/users/users.module';
 @Module({
   imports: [DatabaseModule, CompanyModule, UsersModule],
   controllers: [ClientController],
+  exports: [ClientService],
   providers: [...clientProviders, ClientService],
 })
 export class ClientModule {}

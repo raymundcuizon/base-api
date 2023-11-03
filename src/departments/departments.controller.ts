@@ -1,17 +1,75 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
+import { ClientService } from 'src/client/client.service';
 
 @Controller('departments')
 export class DepartmentsController {
-  constructor(private readonly departmentsService: DepartmentsService) {}
+  constructor(
+    private readonly clientService: ClientService,
+    private readonly departmentsService: DepartmentsService,
+  ) {}
 
-  // @Post()
-  // create(@Body() createDepartmentDto: CreateDepartmentDto) {
-  //   return this.departmentsService.create(createDepartmentDto);
+  @Post()
+  @ApiBody({ type: CreateDepartmentDto })
+  @ApiCreatedResponse({
+    description: 'New Department created',
+    type: CreateDepartmentDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Department not available',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
+  async create(@Body() createDepartmentDto: CreateDepartmentDto) {
+    const checkDepartment = await this.clientService.findOne(
+      +createDepartmentDto.clientId,
+    );
+
+    const isDepartmentExist = await this.departmentsService.findByClientIdName(
+      createDepartmentDto.name,
+      +createDepartmentDto.clientId,
+    );
+
+    if (isDepartmentExist)
+      throw new HttpException('Department already exist', HttpStatus.CONFLICT);
+
+    return this.departmentsService.create(createDepartmentDto);
+  }
+
+  // async create(@Body() createClientDto: CreateClientDto) {
+  //   const checkCompany = await this.companyService.findOne(
+  //     +createClientDto.companyId,
+  //   );
+
+  //   const isClientExist = await this.clientService.findByCompanyIdName(
+  //     createClientDto.name,
+  //     +createClientDto.companyId,
+  //   );
+
+  //   if (isClientExist)
+  //     throw new HttpException(
+  //       'Client Company already exist',
+  //       HttpStatus.CONFLICT,
+  //     );
+
+  //   return this.clientService.create(createClientDto);
   // }
-
   // @Get()
   // findAll() {
   //   return this.departmentsService.findAll();
