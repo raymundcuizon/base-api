@@ -34,8 +34,9 @@ export class DepartmentsService {
     }
   }
 
-  findAll() {
-    return `This action returns all departments`;
+  async findAll(): Promise<Department[]> {
+    const department = await this.departmentRepository.find();
+    return department;
   }
 
   // This is use for validation
@@ -70,7 +71,13 @@ export class DepartmentsService {
     return `This action updates a #${id} department`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} department`;
+  async remove(id: number): Promise<boolean> {
+    try {
+      const client = await this.departmentRepository.delete(id);
+      if (client.affected) return true;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+    return false;
   }
 }

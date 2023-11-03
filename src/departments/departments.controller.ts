@@ -52,41 +52,23 @@ export class DepartmentsController {
     return this.departmentsService.create(createDepartmentDto);
   }
 
-  // async create(@Body() createClientDto: CreateClientDto) {
-  //   const checkCompany = await this.companyService.findOne(
-  //     +createClientDto.companyId,
-  //   );
+  @Get()
+  findAll() {
+    return this.departmentsService.findAll();
+  }
 
-  //   const isClientExist = await this.clientService.findByCompanyIdName(
-  //     createClientDto.name,
-  //     +createClientDto.companyId,
-  //   );
-
-  //   if (isClientExist)
-  //     throw new HttpException(
-  //       'Client Company already exist',
-  //       HttpStatus.CONFLICT,
-  //     );
-
-  //   return this.clientService.create(createClientDto);
-  // }
-  // @Get()
-  // findAll() {
-  //   return this.departmentsService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.departmentsService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.departmentsService.findOne(+id);
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateDepartmentDto: UpdateDepartmentDto) {
   //   return this.departmentsService.update(+id, updateDepartmentDto);
   // }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.departmentsService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.departmentsService.remove(+id);
+  }
 }
