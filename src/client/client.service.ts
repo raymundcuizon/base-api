@@ -70,7 +70,9 @@ export class ClientService {
   }
 
   async findAll(): Promise<Client[]> {
-    return await this.clientRepository.find();
+    return await this.clientRepository.find({
+      relations: ['department'],
+    });
   }
 
   // This is use for validation
@@ -92,6 +94,11 @@ export class ClientService {
     const client = await this.clientRepository
       .createQueryBuilder('client')
       .leftJoinAndSelect('client.company', 'company')
+      .leftJoinAndSelect('client.department', 'department')
+      .limit(7)
+      .orderBy({
+        'department.name': 'ASC',
+      })
       .where('client.id = :id', { id })
       .getOne();
 

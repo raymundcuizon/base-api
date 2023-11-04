@@ -5,7 +5,6 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -26,6 +25,7 @@ export class CompanyService {
     });
 
     company.name = company.name.toLocaleLowerCase();
+
     try {
       const createCompany = await this.companyRepository.save(company);
       return createCompany;
@@ -50,6 +50,7 @@ export class CompanyService {
 
     return company;
   }
+
   async findOne(id: number): Promise<Company> {
     const company = await this.companyRepository
       .createQueryBuilder('company')

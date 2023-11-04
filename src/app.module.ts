@@ -23,13 +23,22 @@ import { LocaleInterceptor } from './locale/locale.interceptor';
       isGlobal: true,
     }),
     DatabaseModule,
-    SystemLogsModule, UsersModule, AuthModule, PositionsModule, CompanyModule, DepartmentsModule, EmployeesModule, ClientModule],
+    SystemLogsModule,
+    UsersModule,
+    AuthModule,
+    PositionsModule,
+    CompanyModule,
+    DepartmentsModule,
+    EmployeesModule,
+    ClientModule,
+  ],
   controllers: [AppController],
-  providers: [AppService,
+  providers: [
+    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LocaleInterceptor,
-    }
+    },
   ],
 })
 export class AppModule {}

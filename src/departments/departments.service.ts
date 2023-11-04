@@ -35,8 +35,9 @@ export class DepartmentsService {
   }
 
   async findAll(): Promise<Department[]> {
-    const department = await this.departmentRepository.find();
-    return department;
+    return await this.departmentRepository.find({
+      relations: ['positions'],
+    });
   }
 
   // This is use for validation
@@ -58,6 +59,11 @@ export class DepartmentsService {
     const department = await this.departmentRepository
       .createQueryBuilder('department')
       .leftJoinAndSelect('department.client', 'client')
+      .leftJoinAndSelect('department.positions', 'positions')
+      .limit(7)
+      .orderBy({
+        'positions.name': 'ASC',
+      })
       .where('department.id = :id', { id })
       .getOne();
 
