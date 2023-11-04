@@ -67,8 +67,22 @@ export class DepartmentsService {
     return department;
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return `This action updates a #${id} department`;
+  async update(
+    id: number,
+    updateDepartmentDto: UpdateDepartmentDto,
+  ): Promise<void> {
+    try {
+      const client = await this.departmentRepository.update(
+        { id },
+        updateDepartmentDto,
+      );
+
+      if (!client.affected)
+        throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async remove(id: number): Promise<boolean> {

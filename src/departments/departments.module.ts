@@ -7,6 +7,7 @@ import { ClientModule } from 'src/client/client.module';
 
 @Module({
   imports: [DatabaseModule, ClientModule],
+  exports: [DepartmentsService],
   controllers: [DepartmentsController],
   providers: [DepartmentsService, ...departmentProviders],
 })

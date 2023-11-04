@@ -62,10 +62,26 @@ export class DepartmentsController {
     return this.departmentsService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateDepartmentDto: UpdateDepartmentDto) {
-  //   return this.departmentsService.update(+id, updateDepartmentDto);
-  // }
+  @Patch(':id')
+  @ApiBody({ type: UpdateDepartmentDto })
+  @ApiCreatedResponse({
+    description: 'Department updated',
+    type: UpdateDepartmentDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Department not available',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updateDepartmentDto: UpdateDepartmentDto,
+  ) {
+    return this.departmentsService.update(+id, updateDepartmentDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

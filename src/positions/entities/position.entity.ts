@@ -8,7 +8,7 @@ export class Position extends AbstractEntity<Position> {
   name: string;
 
   @Column()
-  departmentId: string;
+  departmentId: number;
 
   @ManyToOne(() => Department, (department) => department.positions)
   @JoinTable()

@@ -1,34 +1,88 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { PositionsService } from './positions.service';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
+import { DepartmentsService } from 'src/departments/departments.service';
+import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
 
 @Controller('positions')
 export class PositionsController {
-  constructor(private readonly positionsService: PositionsService) {}
+  constructor(
+    private readonly positionsService: PositionsService,
+    private readonly departmentsService: DepartmentsService,
+  ) {}
 
-  // @Post()
-  // create(@Body() createPositionDto: CreatePositionDto) {
-  //   return this.positionsService.create(createPositionDto);
-  // }
+  @Post()
+  @ApiBody({ type: CreatePositionDto })
+  @ApiCreatedResponse({
+    description: 'New Position created',
+    type: CreatePositionDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Position not available',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
+  async create(@Body() createPositionDto: CreatePositionDto) {
+    await this.departmentsService.findOne(+createPositionDto.departmentId);
 
-  // @Get()
-  // findAll() {
-  //   return this.positionsService.findAll();
-  // }
+    const isPositionExist = await this.positionsService.findByPositionIdName(
+      createPositionDto.name,
+      +createPositionDto.departmentId,
+    );
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.positionsService.findOne(+id);
-  // }
+    if (isPositionExist)
+      throw new HttpException('Position already exist', HttpStatus.CONFLICT);
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePositionDto: UpdatePositionDto) {
-  //   return this.positionsService.update(+id, updatePositionDto);
-  // }
+    return this.positionsService.create(createPositionDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.positionsService.remove(+id);
-  // }
+  @Get()
+  findAll() {
+    return this.positionsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.positionsService.findOne(+id);
+  }
+
+  @Patch(':id')
+  @ApiBody({ type: UpdatePositionDto })
+  @ApiCreatedResponse({
+    description: 'New Position created',
+    type: UpdatePositionDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Position not available',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updatePositionDto: UpdatePositionDto,
+  ) {
+    return this.positionsService.update(+id, updatePositionDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.positionsService.remove(+id);
+  }
 }
