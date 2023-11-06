@@ -1,0 +1,12 @@
+import { Module } from '@nestjs/common';
+import { DeductionService } from './deduction.service';
+import { DeductionController } from './deduction.controller';
+import { deductionProviders } from './allowance.provider';
+import { DatabaseModule } from 'src/database/database.module';
+
+@Module({
+  imports: [DatabaseModule],
+  controllers: [DeductionController],
+  providers: [DeductionService, ...deductionProviders],
+})
+export class DeductionModule {}

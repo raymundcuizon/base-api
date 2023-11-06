@@ -1,19 +1,17 @@
+import { Allowance } from 'src/allowance/entities/allowance.entity';
 import { Company } from 'src/company/entities/company.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
+import { Deduction } from 'src/deduction/entities/deduction.entity';
 import { Department } from 'src/departments/entities/department.entity';
 import { Employee } from 'src/employees/entities/employee.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
-  BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -49,4 +47,12 @@ export class Client extends AbstractEntity<Client> {
   @OneToMany(() => Department, (department) => department.client)
   @JoinTable()
   department: Department[];
+
+  @OneToMany(() => Allowance, (allowance) => allowance.client)
+  @JoinTable()
+  allowances: Allowance[];
+
+  @OneToMany(() => Deduction, (deduction) => deduction.client)
+  @JoinTable()
+  deductions: Deduction[];
 }

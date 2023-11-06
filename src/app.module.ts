@@ -14,6 +14,8 @@ import { configValidationSchema } from './config.schema';
 import { ClientModule } from './client/client.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LocaleInterceptor } from './locale/locale.interceptor';
+import { AllowanceModule } from './allowance/allowance.module';
+import { DeductionModule } from './deduction/deduction.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { LocaleInterceptor } from './locale/locale.interceptor';
     DepartmentsModule,
     EmployeesModule,
     ClientModule,
+    AllowanceModule,
+    DeductionModule,
   ],
   controllers: [AppController],
   providers: [
