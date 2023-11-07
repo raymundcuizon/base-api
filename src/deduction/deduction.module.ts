@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DeductionService } from './deduction.service';
 import { DeductionController } from './deduction.controller';
-import { deductionProviders } from './allowance.provider';
+import { deductionProviders } from './deduction.provider';
 import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
