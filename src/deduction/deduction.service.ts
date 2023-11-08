@@ -55,7 +55,6 @@ export class DeductionService {
     const deduction = await this.deductionRepository
       .createQueryBuilder('deduction')
       .leftJoinAndSelect('deduction.client', 'client')
-
       .where('deduction.id = :id', { id })
       .getOne();
 

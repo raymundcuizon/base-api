@@ -71,7 +71,7 @@ export class ClientService {
 
   async findAll(): Promise<Client[]> {
     return await this.clientRepository.find({
-      relations: ['department'],
+      relations: ['department', 'allowances', 'deductions'],
     });
   }
 
@@ -98,6 +98,16 @@ export class ClientService {
       .limit(7)
       .orderBy({
         'department.name': 'ASC',
+      })
+      .leftJoinAndSelect('client.deductions', 'deductions')
+      .limit(7)
+      .orderBy({
+        'deductions.name': 'ASC',
+      })
+      .leftJoinAndSelect('client.allowances', 'allowances')
+      .limit(7)
+      .orderBy({
+        'allowances.name': 'ASC',
       })
       .where('client.id = :id', { id })
       .getOne();
