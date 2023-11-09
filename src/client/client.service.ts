@@ -109,6 +109,16 @@ export class ClientService {
       .orderBy({
         'allowances.name': 'ASC',
       })
+      .leftJoinAndSelect('client.user', 'user')
+      .limit(7)
+      .orderBy({
+        'user.id': 'ASC',
+      })
+      .leftJoinAndSelect('client.employees', 'employees')
+      .limit(7)
+      .orderBy({
+        'employees.id': 'ASC',
+      })
       .where('client.id = :id', { id })
       .getOne();
 

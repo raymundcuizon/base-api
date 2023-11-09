@@ -1,6 +1,7 @@
 import { Client } from 'src/client/entities/client.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Employee } from 'src/employees/entities/employee.entity';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Allowance extends AbstractEntity<Allowance> {
@@ -15,4 +16,7 @@ export class Allowance extends AbstractEntity<Allowance> {
 
   @ManyToOne(() => Client, (client) => client.allowances)
   client: Client;
+
+  @ManyToMany(() => Employee, (employee) => employee.allowances)
+  employees: Employee[];
 }
