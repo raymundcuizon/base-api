@@ -76,9 +76,9 @@ export class ClientService {
   async findAll(options: IPaginationOptions): Promise<Pagination<Client>> {
     const queryBuilder = this.clientRepository
       .createQueryBuilder('client')
-      .leftJoinAndSelect('client.department', 'department')
-      .leftJoinAndSelect('client.allowances', 'allowances')
-      .leftJoinAndSelect('client.deductions', 'deductions')
+      // .leftJoinAndSelect('client.department', 'department')
+      // .leftJoinAndSelect('client.allowances', 'allowances')
+      // .leftJoinAndSelect('client.deductions', 'deductions')
       .orderBy('client.id', 'ASC');
 
     const paginatedResult = await paginate<Client>(queryBuilder, options);
@@ -111,7 +111,7 @@ export class ClientService {
         'department.name': 'ASC',
       })
       .leftJoinAndSelect('client.deductions', 'deductions')
-      .limit(7)
+      .limit(2)
       .orderBy({
         'deductions.name': 'ASC',
       })

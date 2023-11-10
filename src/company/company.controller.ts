@@ -9,6 +9,9 @@ import {
   HttpStatus,
   Logger,
   HttpException,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -21,6 +24,8 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CompanyResponseDto } from './dto/company-response.dto';
+import { Company } from './entities/company.entity';
+import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('company')
 export class CompanyController {
@@ -62,12 +67,16 @@ export class CompanyController {
   }
 
   @Get()
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: CompanyResponseDto,
-  })
-  findAll() {
-    return this.companyService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Company>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.companyService.findAll({
+      page,
+      limit,
+      route: 'http://localhost:3001',
+    });
   }
 
   @Get(':id')

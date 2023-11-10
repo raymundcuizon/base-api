@@ -10,6 +10,11 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class CompanyService {
@@ -35,10 +40,19 @@ export class CompanyService {
     }
   }
 
-  async findAll(): Promise<Company[]> {
-    return await this.companyRepository.find({
-      relations: ['clients'],
-    });
+  async findAll(options: IPaginationOptions): Promise<Pagination<Company>> {
+    const queryBuilder = this.companyRepository
+      .createQueryBuilder('company')
+      // .leftJoinAndSelect('company.clients', 'clients')
+      // .limit(1)
+      // .orderBy({
+      //   'clients.name': 'ASC',
+      // })
+      .orderBy('company.id', 'ASC');
+
+    const paginatedResult = await paginate<Company>(queryBuilder, options);
+
+    return paginatedResult;
   }
 
   async findByName(name: string): Promise<Company | null> {

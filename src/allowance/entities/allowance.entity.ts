@@ -1,7 +1,14 @@
 import { Client } from 'src/client/entities/client.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
 import { Employee } from 'src/employees/entities/employee.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 
 @Entity()
 export class Allowance extends AbstractEntity<Allowance> {
@@ -15,6 +22,7 @@ export class Allowance extends AbstractEntity<Allowance> {
   description: string;
 
   @ManyToOne(() => Client, (client) => client.allowances)
+  @JoinColumn({ name: 'clientId' })
   client: Client;
 
   @ManyToMany(() => Employee, (employee) => employee.allowances)
