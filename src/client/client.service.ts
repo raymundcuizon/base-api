@@ -13,9 +13,12 @@ import { DataSource, Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { User, userType } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import * as bcrypt from 'bcryptjs';
-import { stringify } from 'querystring';
 import { generateRandomCode } from 'src/utils';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class ClientService {
@@ -26,6 +29,7 @@ export class ClientService {
     @Inject('CLIENT_REPOSITORY') private clientRepository: Repository<Client>,
     private readonly userService: UsersService,
   ) {}
+
   async create(createClientDto: CreateClientDto): Promise<Client> {
     let client = new Client({
       ...createClientDto,
@@ -69,10 +73,17 @@ export class ClientService {
     }
   }
 
-  async findAll(): Promise<Client[]> {
-    return await this.clientRepository.find({
-      relations: ['department', 'allowances', 'deductions'],
-    });
+  async findAll(options: IPaginationOptions): Promise<Pagination<Client>> {
+    const queryBuilder = this.clientRepository
+      .createQueryBuilder('client')
+      .leftJoinAndSelect('client.department', 'department')
+      .leftJoinAndSelect('client.allowances', 'allowances')
+      .leftJoinAndSelect('client.deductions', 'deductions')
+      .orderBy('client.id', 'ASC');
+
+    const paginatedResult = await paginate<Client>(queryBuilder, options);
+
+    return paginatedResult;
   }
 
   // This is use for validation

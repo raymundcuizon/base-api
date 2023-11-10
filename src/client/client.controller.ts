@@ -9,12 +9,23 @@ import {
   Logger,
   HttpStatus,
   HttpException,
+  DefaultValuePipe,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CompanyService } from 'src/company/company.service';
+import { PaginateQueryParamsDto } from './dto/paginate-query-params.dto';
+import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
+import { Client } from './entities/client.entity';
 
 @Controller('client')
 export class ClientController {
@@ -59,8 +70,16 @@ export class ClientController {
   }
 
   @Get()
-  findAll() {
-    return this.clientService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Client>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.clientService.findAll({
+      page,
+      limit,
+      route: 'http://localhost:3001',
+    });
   }
 
   @Get(':id')
