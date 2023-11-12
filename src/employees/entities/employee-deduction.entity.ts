@@ -19,6 +19,13 @@ export class EmployeeDeduction extends AbstractEntity<EmployeeDeduction> {
   @JoinColumn({ name: 'employee_id' })
   employee: Employee;
 
+  @Column({
+    type: 'smallint',
+    width: 1,
+    comment: '1 = Monthly, 2= Semi-Monthly, 3 = once',
+  })
+  type: number;
+
   @ManyToOne(() => Deduction, (deduction) => deduction.employees)
   @JoinColumn({ name: 'deduction_id' })
   deduction: Deduction;

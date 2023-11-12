@@ -19,6 +19,13 @@ export class EmployeeAllowance extends AbstractEntity<EmployeeAllowance> {
   @JoinColumn({ name: 'employee_id' })
   employee: Employee;
 
+  @Column({
+    type: 'smallint',
+    width: 1,
+    comment: '1 = Monthly, 2= Semi-Monthly, 3 = once',
+  })
+  type: number;
+
   @ManyToOne(() => Allowance, (allowance) => allowance.employees)
   @JoinColumn({ name: 'allowance_id' })
   allowance: Allowance;

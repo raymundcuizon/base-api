@@ -19,6 +19,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { Deduction } from 'src/deduction/entities/deduction.entity';
 
 @Injectable()
 export class ClientService {
@@ -102,36 +103,37 @@ export class ClientService {
   }
 
   async findOne(id: number): Promise<Client> {
-    const client = await this.clientRepository
+    const queryBuilder = this.clientRepository
       .createQueryBuilder('client')
       .leftJoinAndSelect('client.company', 'company')
-      .leftJoinAndSelect('client.department', 'department')
-      .limit(7)
-      .orderBy({
-        'department.name': 'ASC',
-      })
+      .where('client.id = :id', { id });
+
+    const client = await queryBuilder.getOne();
+
+    const employees = await queryBuilder
+      .leftJoinAndSelect('client.employees', 'employees')
+      .limit(2)
+      .getOne();
+
+    const deductions = await queryBuilder
       .leftJoinAndSelect('client.deductions', 'deductions')
       .limit(2)
-      .orderBy({
-        'deductions.name': 'ASC',
-      })
-      .leftJoinAndSelect('client.allowances', 'allowances')
-      .limit(7)
-      .orderBy({
-        'allowances.name': 'ASC',
-      })
-      .leftJoinAndSelect('client.user', 'user')
-      .limit(7)
-      .orderBy({
-        'user.id': 'ASC',
-      })
-      .leftJoinAndSelect('client.employees', 'employees')
-      .limit(7)
-      .orderBy({
-        'employees.id': 'ASC',
-      })
-      .where('client.id = :id', { id })
       .getOne();
+
+    const department = await queryBuilder
+      .leftJoinAndSelect('client.department', 'department')
+      .limit(2)
+      .getOne();
+
+    const allowances = await queryBuilder
+      .leftJoinAndSelect('client.allowances', 'allowances')
+      .limit(2)
+      .getOne();
+
+    client.employees = employees.employees;
+    client.deductions = deductions.deductions;
+    client.department = department.department;
+    client.allowances = allowances.allowances;
 
     if (!client)
       throw new HttpException('Client Company not found', HttpStatus.NOT_FOUND);
