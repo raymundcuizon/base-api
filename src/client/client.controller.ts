@@ -88,11 +88,19 @@ export class ClientController {
   }
 
   @Patch(':id')
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update(+id, updateClientDto);
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   remove(@Param('id') id: string) {
     return this.clientService.remove(+id);
   }

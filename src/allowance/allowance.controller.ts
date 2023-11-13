@@ -52,11 +52,19 @@ export class AllowanceController {
   }
 
   @Get()
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   findAll() {
     return this.allowanceService.findAll();
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   findOne(@Param('id') id: string) {
     return this.allowanceService.findOne(+id);
   }
@@ -82,6 +90,10 @@ export class AllowanceController {
     return this.allowanceService.update(+id, updateAllowanceDto);
   }
 
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.allowanceService.remove(+id);
