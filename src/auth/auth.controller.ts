@@ -26,6 +26,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
   ApiHeader,
+  ApiTags,
 } from '@nestjs/swagger';
 import {
   SigninResponseDTO,
@@ -38,6 +39,7 @@ import { ActivateNewUserDTO } from './dto/activateNewUser.dto';
 
 @Controller('auth')
 @ApiHeader({ name: 'locale' })
+@ApiTags('auth')
 export class AuthController {
   private logger = new Logger('AuthController');
   constructor(private readonly authService: AuthService) {}

@@ -21,6 +21,7 @@ import {
   ApiCreatedResponse,
   ApiQuery,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { CompanyService } from 'src/company/company.service';
 import { PaginateQueryParamsDto } from './dto/paginate-query-params.dto';
@@ -28,6 +29,7 @@ import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { Client } from './entities/client.entity';
 
 @Controller('client')
+@ApiTags('client')
 export class ClientController {
   private logger = new Logger('ClientController');
 

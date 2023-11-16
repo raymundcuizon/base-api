@@ -13,9 +13,15 @@ import { AllowanceService } from './allowance.service';
 import { CreateAllowanceDto } from './dto/create-allowance.dto';
 import { UpdateAllowanceDto } from './dto/update-allowance.dto';
 import { ClientService } from 'src/client/client.service';
-import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('allowance')
+@ApiTags('allowance')
 export class AllowanceController {
   constructor(
     private readonly clientService: ClientService,

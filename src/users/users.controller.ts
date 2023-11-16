@@ -21,6 +21,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiResponse,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CreateUserSuccessDto } from './dto/create-user-success.dto';
@@ -28,6 +29,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/decorators/role.enum';
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

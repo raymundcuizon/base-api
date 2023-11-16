@@ -12,10 +12,16 @@ import {
 import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClientService } from 'src/client/client.service';
 
 @Controller('departments')
+@ApiTags('departments')
 export class DepartmentsController {
   constructor(
     private readonly clientService: ClientService,

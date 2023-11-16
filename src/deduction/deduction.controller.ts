@@ -13,9 +13,15 @@ import { DeductionService } from './deduction.service';
 import { CreateDeductionDto } from './dto/create-deduction.dto';
 import { UpdateDeductionDto } from './dto/update-deduction.dto';
 import { ClientService } from 'src/client/client.service';
-import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('deduction')
+@ApiTags('deduction')
 export class DeductionController {
   constructor(
     private readonly clientService: ClientService,

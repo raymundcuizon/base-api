@@ -13,9 +13,15 @@ import { PositionsService } from './positions.service';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
 import { DepartmentsService } from 'src/departments/departments.service';
-import { ApiBody, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('positions')
+@ApiTags('positions')
 export class PositionsController {
   constructor(
     private readonly positionsService: PositionsService,

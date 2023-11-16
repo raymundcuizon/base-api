@@ -21,6 +21,7 @@ import {
   ApiCreatedResponse,
   ApiExtraModels,
   ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CompanyResponseDto } from './dto/company-response.dto';
@@ -28,6 +29,7 @@ import { Company } from './entities/company.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('company')
+@ApiTags('Company')
 export class CompanyController {
   private logger = new Logger('CompanyController');
 

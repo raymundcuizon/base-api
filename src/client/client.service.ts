@@ -19,7 +19,6 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
-import { Deduction } from 'src/deduction/entities/deduction.entity';
 
 @Injectable()
 export class ClientService {
@@ -77,9 +76,6 @@ export class ClientService {
   async findAll(options: IPaginationOptions): Promise<Pagination<Client>> {
     const queryBuilder = this.clientRepository
       .createQueryBuilder('client')
-      // .leftJoinAndSelect('client.department', 'department')
-      // .leftJoinAndSelect('client.allowances', 'allowances')
-      // .leftJoinAndSelect('client.deductions', 'deductions')
       .orderBy('client.id', 'ASC');
 
     const paginatedResult = await paginate<Client>(queryBuilder, options);
