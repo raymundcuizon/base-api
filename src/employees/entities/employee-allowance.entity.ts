@@ -12,9 +12,6 @@ import { AbstractEntity } from 'src/database/abstract.entity';
 
 @Entity()
 export class EmployeeAllowance extends AbstractEntity<EmployeeAllowance> {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Employee, (employee) => employee.allowances)
   @JoinColumn({ name: 'employee_id' })
   employee: Employee;

@@ -12,9 +12,6 @@ import { Deduction } from 'src/deduction/entities/deduction.entity';
 
 @Entity()
 export class EmployeeDeduction extends AbstractEntity<EmployeeDeduction> {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Employee, (employee) => employee.allowances)
   @JoinColumn({ name: 'employee_id' })
   employee: Employee;

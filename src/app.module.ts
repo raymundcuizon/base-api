@@ -16,6 +16,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LocaleInterceptor } from './locale/locale.interceptor';
 import { AllowanceModule } from './allowance/allowance.module';
 import { DeductionModule } from './deduction/deduction.module';
+import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { DeductionModule } from './deduction/deduction.module';
     ClientModule,
     AllowanceModule,
     DeductionModule,
+    AttendanceModule,
   ],
   controllers: [AppController],
   providers: [

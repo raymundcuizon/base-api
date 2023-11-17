@@ -37,6 +37,14 @@ export class Employee extends AbstractEntity<Employee> {
   })
   userId: number;
 
+  @Column({
+    nullable: false,
+  })
+  employee_no: string;
+
+  @Column('decimal', { precision: 6, scale: 2 })
+  salary: number;
+
   @ManyToOne(() => User, (user) => user.employees)
   @JoinTable()
   user: User;
