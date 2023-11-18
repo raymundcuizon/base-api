@@ -27,6 +27,7 @@ export class Company extends AbstractEntity<Company> {
   @JoinColumn()
   clients: Client[];
 
-  @ManyToOne(() => User, (user) => user.companies)
-  user: User;
+  @OneToMany(() => User, (user) => user.company)
+  @JoinColumn()
+  users: User[];
 }

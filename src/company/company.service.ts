@@ -8,35 +8,66 @@ import {
 } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
 import {
   paginate,
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { UsersService } from 'src/users/users.service';
+import { User, userType } from 'src/users/entities/user.entity';
+import { generateRandomCode } from 'src/utils';
 
 @Injectable()
 export class CompanyService {
   private logger = new Logger('CompanyService');
 
   constructor(
+    @Inject('DATA_SOURCE') private dataSource: DataSource,
     @Inject('COMPANY_REPOSITORY')
     private companyRepository: Repository<Company>,
+    private readonly userService: UsersService,
   ) {}
+
   async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
     let company = new Company({
       ...createCompanyDto,
     });
 
     company.name = company.name.toLocaleLowerCase();
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
     try {
-      const createCompany = await this.companyRepository.save(company);
-      return createCompany;
+      const saveCompany = await queryRunner.manager.save(Company, company);
+
+      const saltPassword = await this.userService.saltPassword('1234');
+      const user = {
+        email: createCompanyDto.email,
+        username: createCompanyDto.email.split('@')[0],
+        firstname: 'n/a',
+        salt: saltPassword.salt,
+        password: saltPassword.password,
+        lastname: 'n/a',
+        mobileNumber: createCompanyDto.contact_number,
+        isActivated: false,
+        type: userType.COM_ADMIN,
+        companyId: saveCompany.id,
+        activationCode: generateRandomCode(12),
+      };
+      await queryRunner.manager.save(User, user);
+
+      await queryRunner.commitTransaction();
+
+      return saveCompany;
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException();
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(error.toString());
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -69,11 +100,21 @@ export class CompanyService {
     const company = await this.companyRepository
       .createQueryBuilder('company')
       .leftJoinAndSelect('company.clients', 'clients')
-      .limit(7)
-      .orderBy({
-        'clients.name': 'ASC',
-      })
-      .select(['company', 'clients.id', 'clients.name'])
+      .leftJoinAndSelect('company.users', 'users')
+      .select([
+        'company',
+        'clients.id',
+        'clients.name',
+        'users.id',
+        'users.type',
+        'users.email',
+        'users.firstname',
+        'users.lastname',
+        'users.isActivated',
+        'users.activationCode',
+        'users.type',
+        'users.mobileNumber',
+      ])
       .where('company.id = :id', { id })
       .getOne();
     if (!company)

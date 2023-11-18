@@ -12,6 +12,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -45,7 +46,7 @@ export class Employee extends AbstractEntity<Employee> {
   @Column('decimal', { precision: 6, scale: 2 })
   salary: number;
 
-  @ManyToOne(() => User, (user) => user.employees)
+  @OneToOne(() => User, (user) => user.employee)
   @JoinTable()
   user: User;
 

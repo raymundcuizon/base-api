@@ -41,8 +41,8 @@ export class Client extends AbstractEntity<Client> {
   @JoinTable()
   company: Company;
 
-  @ManyToOne(() => User, (user) => user.clients)
-  user: User;
+  @OneToMany(() => User, (user) => user.client)
+  users: User[];
 
   @OneToMany(() => Department, (department) => department.client)
   @JoinTable()
