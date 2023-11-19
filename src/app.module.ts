@@ -17,6 +17,7 @@ import { LocaleInterceptor } from './locale/locale.interceptor';
 import { AllowanceModule } from './allowance/allowance.module';
 import { DeductionModule } from './deduction/deduction.module';
 import { AttendanceModule } from './attendance/attendance.module';
+import { CashAdvanceModule } from './cash-advance/cash-advance.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AttendanceModule } from './attendance/attendance.module';
     AllowanceModule,
     DeductionModule,
     AttendanceModule,
+    CashAdvanceModule,
   ],
   controllers: [AppController],
   providers: [

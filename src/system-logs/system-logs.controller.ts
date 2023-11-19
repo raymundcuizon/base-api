@@ -15,7 +15,7 @@ import { Request } from 'express';
 import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 @Controller('system-logs')
-@ApiHeader({ name: 'locale' })
+// @ApiHeader({ name: 'locale' })
 @ApiTags('System logs')
 export class SystemLogsController {
   constructor(private readonly systemLogsService: SystemLogsService) {}
