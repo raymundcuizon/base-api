@@ -16,8 +16,9 @@ import {
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
 import { UsersService } from 'src/users/users.service';
-import { User, userType } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { generateRandomCode } from 'src/utils';
+import { Role } from 'src/decorators/role.enum';
 
 @Injectable()
 export class CompanyService {
@@ -53,7 +54,7 @@ export class CompanyService {
         lastname: 'n/a',
         mobileNumber: createCompanyDto.contact_number,
         isActivated: false,
-        type: userType.COM_ADMIN,
+        role: Role.COM_ADMIN,
         companyId: saveCompany.id,
         activationCode: generateRandomCode(12),
       };

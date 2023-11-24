@@ -16,15 +16,7 @@ import { AbstractEntity } from 'src/database/abstract.entity';
 import { Client } from 'src/client/entities/client.entity';
 import { Company } from 'src/company/entities/company.entity';
 import { Employee } from 'src/employees/entities/employee.entity';
-
-export enum userType {
-  SYS_ADMIN = 'SYS_ADMIN',
-  COM_ADMIN = 'COM_ADMIN',
-  COM_STAFF = 'COM_STAFF',
-  CLI_ADMIN = 'CLI_ADMIN',
-  CLI_STAFF = 'CLI_STAFF',
-  EMP = 'EMP',
-}
+import { Role } from 'src/decorators/role.enum';
 
 @Entity()
 @Unique(['username', 'email', 'mobileNumber'])
@@ -63,10 +55,10 @@ export class User extends AbstractEntity<User> {
 
   @Column({
     type: 'enum',
-    enum: userType,
-    default: userType.EMP,
+    enum: Role,
+    default: Role.EMP,
   })
-  type: userType;
+  role: Role;
 
   @Column()
   mobileNumber: string;

@@ -8,7 +8,7 @@ export class SigninResponseDTO {
   @ApiProperty() firstname: string;
   @ApiProperty() lastname: string;
   @ApiProperty() username: string;
-  @ApiProperty() userType: string;
+  @ApiProperty() role: string;
 }
 
 export class SigninResponseNeedToactivateDTO {

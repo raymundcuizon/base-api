@@ -25,8 +25,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CreateUserSuccessDto } from './dto/create-user-success.dto';
-import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/decorators/role.enum';
+import { User } from './entities/user.entity';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { RolesGuard } from 'src/decorators/roles.guard';
+import { AllowedRoles } from 'src/decorators/roles.decorator';
 
 @Controller('users')
 @ApiTags('users')
@@ -61,10 +64,11 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), RolesGuard)
+  @AllowedRoles(Role.COM_ADMIN)
   @ApiUnauthorizedResponse()
   @ApiBearerAuth('access-token')
-  findAll() {
+  findAll(@GetUser() user: User) {
     return this.usersService.findAll();
   }
 

@@ -11,7 +11,7 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { DataSource, Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
-import { User, userType } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { generateRandomCode } from 'src/utils';
 import {
@@ -19,6 +19,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { Role } from 'src/decorators/role.enum';
 
 @Injectable()
 export class ClientService {
@@ -54,7 +55,7 @@ export class ClientService {
         lastname: 'n/a',
         mobileNumber: createClientDto.contact_number,
         isActivated: false,
-        type: userType.CLI_ADMIN,
+        role: Role.CLI_ADMIN,
         activationCode: generateRandomCode(12),
       };
       const saveUser = await queryRunner.manager.save(User, user);

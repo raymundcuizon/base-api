@@ -33,9 +33,8 @@ import {
   SigninResponseNeedToactivateDTO,
 } from './dto/signinResponse.dto';
 import { RefreshDto } from './dto/refreshDto';
-import { Locale } from '../decorators/locale.decorator';
-import { userType } from 'src/users/entities/user.entity';
 import { ActivateNewUserDTO } from './dto/activateNewUser.dto';
+import { Role } from 'src/decorators/role.enum';
 
 @Controller('auth')
 @ApiHeader({ name: 'locale' })
@@ -72,7 +71,7 @@ export class AuthController {
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
-    if (user.type === userType.CLI_ADMIN && !user.isActivated)
+    if (user.role === Role.CLI_ADMIN && !user.isActivated)
       return {
         activationCode: user.activationCode,
         type: 'new_password_required',

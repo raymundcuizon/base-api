@@ -9,14 +9,7 @@ import { RolesGuard } from 'src/decorators/roles.guard';
 @Module({
   imports: [DatabaseModule, forwardRef(() => AuthModule)],
   controllers: [UsersController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-    ...userProviders,
-    UsersService,
-  ],
+  providers: [...userProviders, UsersService],
   exports: [UsersService],
 })
 export class UsersModule {}

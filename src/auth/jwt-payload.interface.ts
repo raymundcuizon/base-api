@@ -5,5 +5,5 @@ export interface JwtPayload {
   firstname: string;
   lastname: string;
   mobileNumber: string;
-  userType: string;
+  role: string;
 }
