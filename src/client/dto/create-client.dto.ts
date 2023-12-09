@@ -23,6 +23,5 @@ export class CreateClientDto {
   contact_number: string;
 
   @IsNumber()
-  @ApiProperty({ type: Number, description: 'Company Id' })
-  companyId: number;
+  companyId?: number;
 }

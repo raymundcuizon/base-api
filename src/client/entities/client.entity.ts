@@ -22,11 +22,11 @@ export class Client extends AbstractEntity<Client> {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  email: string;
+
   @Column()
   companyId: number;
-
-  @Column({ nullable: true })
-  userId: number;
 
   @Column({ nullable: true })
   contact_number: string;

@@ -46,6 +46,8 @@ export class ClientService {
     try {
       const saltPassword = await this.userService.saltPassword('1234');
 
+      const saveClient = await queryRunner.manager.save(Client, client);
+
       const user = {
         email: createClientDto.email,
         username: createClientDto.email.split('@')[0],
@@ -57,10 +59,10 @@ export class ClientService {
         isActivated: false,
         role: Role.CLI_ADMIN,
         activationCode: generateRandomCode(12),
+        clientId: saveClient.id,
+        companyId: createClientDto.companyId,
       };
       const saveUser = await queryRunner.manager.save(User, user);
-      client.userId = saveUser.id;
-      const saveClient = await queryRunner.manager.save(Client, client);
 
       await queryRunner.commitTransaction();
 
@@ -74,9 +76,13 @@ export class ClientService {
     }
   }
 
-  async findAll(options: IPaginationOptions): Promise<Pagination<Client>> {
+  async findAll(
+    options: IPaginationOptions,
+    companyId: number,
+  ): Promise<Pagination<Client>> {
     const queryBuilder = this.clientRepository
       .createQueryBuilder('client')
+      .where('client.companyId = :companyId', { companyId })
       .orderBy('client.id', 'ASC');
 
     const paginatedResult = await paginate<Client>(queryBuilder, options);

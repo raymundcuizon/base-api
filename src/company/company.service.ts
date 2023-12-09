@@ -107,13 +107,12 @@ export class CompanyService {
         'clients.id',
         'clients.name',
         'users.id',
-        'users.type',
+        'users.role',
         'users.email',
         'users.firstname',
         'users.lastname',
         'users.isActivated',
         'users.activationCode',
-        'users.type',
         'users.mobileNumber',
       ])
       .where('company.id = :id', { id })
